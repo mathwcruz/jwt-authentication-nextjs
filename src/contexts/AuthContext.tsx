@@ -1,30 +1,40 @@
-import { createContext, useEffect, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { setCookie, parseCookies } from "nookies";
 import Router from "next/router";
 
 import { recoverUserInformation, signInRequest } from "../services/auth";
 import { api } from "../services/api";
 
-type User = {
+interface User {
   name: string;
   email: string;
   avatar_url: string;
-};
+}
 
-type SignInData = {
+interface SignInData {
   email: string;
   password: string;
-};
+}
 
-type AuthContextType = {
+interface AuthContextData {
   isAuthenticated: boolean;
   user: User;
   signIn: (data: SignInData) => Promise<void>;
-};
+}
 
-export const AuthContext = createContext({} as AuthContextType);
+interface AuthProviderProps {
+  children: ReactNode;
+}
 
-export function AuthProvider({ children }) {
+export const AuthContext = createContext({} as AuthContextData);
+
+export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
 
   const isAuthenticated = !!user;
@@ -34,7 +44,7 @@ export function AuthProvider({ children }) {
 
     if (token) {
       recoverUserInformation().then((response) => {
-        setUser(response.user);
+        setUser(response?.user);
       });
     }
   }, []);
@@ -46,7 +56,7 @@ export function AuthProvider({ children }) {
     });
 
     setCookie(undefined, "nextauth.token", token, {
-      maxAge: 60 * 60 * 1, // 1 hour
+      maxAge: 60 * 60 * 1, // => 1 hour
     });
 
     api.defaults.headers["Authorization"] = `Bearer ${token}`;
@@ -62,3 +72,7 @@ export function AuthProvider({ children }) {
     </AuthContext.Provider>
   );
 }
+
+export const useAuth = () => {
+  return useContext(AuthContext);
+};

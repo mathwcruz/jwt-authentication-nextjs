@@ -8,15 +8,15 @@ type SignInRequestData = {
 const delay = (amount = 750) =>
   new Promise((resolve) => setTimeout(resolve, amount));
 
-export async function signInRequest(data: SignInRequestData) {
+export async function signInRequest({ email, password }: SignInRequestData) {
   await delay();
 
   return {
     token: uuid(),
     user: {
-      name: "Diego Fernandes",
-      email: "diego@rocketseat.com.br",
-      avatar_url: "https://github.com/diego3g.png",
+      name: "Matheus da Cruz",
+      email: "matheuswachcruz@gmail.com",
+      avatar_url: "https://github.com/mathwcruz.png",
     },
   };
 }
@@ -26,9 +26,9 @@ export async function recoverUserInformation() {
 
   return {
     user: {
-      name: "Diego Fernandes",
-      email: "diego@rocketseat.com.br",
-      avatar_url: "https://github.com/diego3g.png",
+      name: "Matheus da Cruz",
+      email: "matheuswachcruz@gmail.com",
+      avatar_url: "https://github.com/mathwcruz.png",
     },
   };
 }
